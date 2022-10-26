@@ -2,23 +2,49 @@
 
 require 'pry-byebug'
 
-spaces = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+# class for player where name is either 'X' or 'O'
+class Player
+  attr_reader :name
 
-def print_board(spaces)
-  puts "     |     |\n"\
-       "  #{spaces[6]}  |  #{spaces[7]}  |  #{spaces[8]}\n"\
-       "_____|_____|_____\n"\
-       "     |     |\n"\
-       "  #{spaces[3]}  |  #{spaces[4]}  |  #{spaces[5]}\n"\
-       "_____|_____|_____\n"\
-       "     |     |\n"\
-       "  #{spaces[0]}  |  #{spaces[1]}  |  #{spaces[2]}\n"\
-       "     |     |"
+  def initialize(name)
+    @name = name
+  end
 end
 
-print_board(spaces)
-spaces[0] = 'X'
-spaces[4] = 'X'
-spaces[8] = 'X'
-print_board(spaces)
-print_board(spaces)
+# class for creating ascii board
+class Board
+  attr_accessor :one, :two, :three, :four, :five, :six, :seven, :eight, :nine
+
+  def initialize
+    @one = 1
+    @two = 2
+    @three = 3
+    @four = 4
+    @five = 5
+    @six = 6
+    @seven = 7
+    @eight = 8
+    @nine = 9
+  end
+
+  def print_board
+    puts "     |     |\n"\
+         "  #{seven}  |  #{eight}  |  #{nine}\n"\
+         "_____|_____|_____\n"\
+         "     |     |\n"\
+         "  #{four}  |  #{five}  |  #{six}\n"\
+         "_____|_____|_____\n"\
+         "     |     |\n"\
+         "  #{one}  |  #{two}  |  #{three}\n     |     |"
+  end
+end
+
+player_x = Player.new('X')
+player_o = Player.new('O')
+board = Board.new
+
+board.print_board
+
+board.one = player_x.name
+board.five = player_o.name
+board.print_board
