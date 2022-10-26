@@ -2,49 +2,87 @@
 
 require 'pry-byebug'
 
-# class for player where name is either 'X' or 'O'
-class Player
-  attr_reader :name
-
-  def initialize(name)
-    @name = name
-  end
-end
-
 # class for creating ascii board
 class Board
-  attr_accessor :one, :two, :three, :four, :five, :six, :seven, :eight, :nine
+  attr_accessor :spaces
 
   def initialize
-    @one = 1
-    @two = 2
-    @three = 3
-    @four = 4
-    @five = 5
-    @six = 6
-    @seven = 7
-    @eight = 8
-    @nine = 9
+    @spaces = [1, 2, 3, 4, 5, 6, 7, 8, 9]
   end
 
   def print_board
     puts "     |     |\n"\
-         "  #{seven}  |  #{eight}  |  #{nine}\n"\
+         "  #{spaces[6]}  |  #{spaces[7]}  |  #{spaces[8]}\n"\
          "_____|_____|_____\n"\
          "     |     |\n"\
-         "  #{four}  |  #{five}  |  #{six}\n"\
+         "  #{spaces[3]}  |  #{spaces[4]}  |  #{spaces[5]}\n"\
          "_____|_____|_____\n"\
          "     |     |\n"\
-         "  #{one}  |  #{two}  |  #{three}\n     |     |"
+         "  #{spaces[0]}  |  #{spaces[1]}  |  #{spaces[2]}\n     |     |"
   end
 end
 
-player_x = Player.new('X')
-player_o = Player.new('O')
-board = Board.new
+# class to contain the game
+class Game
+  attr_reader :play
 
-board.print_board
+  def initialize
+    @player_x = 'X'
+    @player_o = 'O'
+    @board = Board.new
+    @turn = @player_x
+    @play = true
+  end
 
-board.one = player_x.name
-board.five = player_o.name
-board.print_board
+  def print_turn
+    @board.print_board
+    puts "It is player #{@turn}'s turn\n"\
+         'enter an open number followed by enter to make your move'
+  end
+
+  def make_move(move)
+    if move.between?(1, 9)
+      if @board.spaces[move - 1] == move
+        @board.spaces[move - 1] = @turn
+        @play = continue?
+      else
+        puts "Space #{move} is not available!"
+      end
+    else
+      puts 'Please enter an valid number!'
+    end
+  end
+
+  def print_winner
+    @board.print_board
+    puts "Player #{@turn} has won the game!"
+  end
+
+  private
+
+  def toggle_turn
+    @turn = if @turn == @player_x
+              @player_o
+            else
+              @player_x
+            end
+  end
+
+  def continue?
+    if @board.spaces[0..2].all? { |space| space == @turn }
+      print_winner
+      false
+    else
+      toggle_turn
+      true
+    end
+  end
+end
+
+game = Game.new
+
+while game.play
+  game.print_turn
+  move = gets.chomp.to_i
+  game.make_move(move)
+end
