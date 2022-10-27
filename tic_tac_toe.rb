@@ -58,6 +58,11 @@ class Game
     puts "Player #{@turn} has won the game!"
   end
 
+  def print_tie
+    @board.print_board
+    puts 'Tie game!'
+  end
+
   private
 
   def toggle_turn
@@ -69,8 +74,18 @@ class Game
   end
 
   def continue?
-    if @board.spaces[0..2].all? { |space| space == @turn }
+    if @board.spaces[0..2].all? { |space| space == @turn } ||
+       @board.spaces[3..5].all? { |space| space == @turn } ||
+       @board.spaces[6..8].all? { |space| space == @turn } ||
+       (@board.spaces[0] == @turn && @board.spaces[3] == @turn && @board.spaces[6] == @turn) ||
+       (@board.spaces[1] == @turn && @board.spaces[4] == @turn && @board.spaces[7] == @turn) ||
+       (@board.spaces[2] == @turn && @board.spaces[5] == @turn && @board.spaces[8] == @turn) ||
+       (@board.spaces[0] == @turn && @board.spaces[4] == @turn && @board.spaces[8] == @turn) ||
+       (@board.spaces[2] == @turn && @board.spaces[4] == @turn && @board.spaces[6] == @turn)
       print_winner
+      false
+    elsif @board.spaces.all? { |space| space.is_a?(String) }
+      print_tie
       false
     else
       toggle_turn
